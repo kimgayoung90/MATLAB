@@ -1,0 +1,103 @@
+function kgy_23010898_1()
+
+    x = [-2 -1 0 1 2];
+
+   
+    result1 = squareVec(x);
+    disp('squareVec 결과:');
+    disp(result1);
+
+  
+    result2 = meanVec(x);
+    disp('meanVec 결과:');
+    disp(result2);
+
+  
+    result3 = mixedTransform(x);
+    disp('mixedTransform 결과:');
+    disp(result3);
+end
+
+function result = squareVec(v)
+    result = v .^ 2;
+end
+
+function result = meanVec(v)
+    result = mean(v);
+end
+
+function result = mixedTransform(v)
+    result = zeros(size(v));
+    for i = 1:length(v)
+        if v(i) == 0
+            result(i) = 0;
+        elseif mod(v(i), 2) == 0
+            result(i) = abs(v(i));
+        else
+            result(i) = 2*v(i) + 1;
+        end
+    end
+end
+
+==========================================================================================
+
+function kgy_23010898_2()
+
+  
+    name = input('학생 이름을 입력하시오: ', 's');
+
+    
+    scores = input('국어, 영어, 수학 점수를 벡터로 입력하시오: ');
+
+  
+    avg = mean(scores);
+    fprintf('이름: %s\n', name);
+    fprintf('세 과목 점수: %d %d %d\n', scores(1), scores(2), scores(3));
+    fprintf('평균: %.2f\n', avg);
+
+    if avg >= 90
+        fprintf('등급: Excellent\n');
+    elseif avg >= 80
+        fprintf('등급: Good\n');
+    elseif avg >= 70
+        fprintf('등급: Fair\n');
+    else
+        fprintf('등급: Needs Improvement\n');
+    end
+end
+
+==========================================================================================
+
+function kgy_23010898_3()
+
+    applicants = [165 72 1;
+                  172 85 0;
+                  168 91 1;
+                  181 77 1;
+                  174 69 0;
+                  169 88 1];
+
+   
+    tall = applicants(:,1) >= 170;
+    disp('(1) 키 170 이상 논리 배열:');
+    disp(tall);
+  
+    highScore = applicants(:,2) >= 80;
+    disp('(2) 시험점수 80 이상 논리 배열:');
+    disp(highScore);
+
+    passed = applicants(:,3) == 1;
+    disp('(3) 면접 통과자 논리 배열:');
+    disp(passed);
+
+    finalIdx = find(tall & highScore & passed);
+    disp('(4) 최종 합격자 행 번호:');
+    disp(finalIdx);
+
+    disp('(5) 최종 합격자 정보 [행번호, 키, 시험점수, 면접통과여부]:');
+    finalInfo = [finalIdx, applicants(finalIdx, :)];
+    disp(finalInfo);
+end
+
+
+
