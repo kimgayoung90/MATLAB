@@ -1,0 +1,180 @@
+% 1번
+
+x= input ('실수 x를 입력하시오: ')
+if x>0 
+    y=x^2
+else y=0
+end
+
+% 2번
+clear ,clc
+m = input('월 번호를 입력하세요 (1~12): ');
+
+switch m
+    case 1
+        disp('January')
+    case 2
+        disp('February')
+    case 3
+        disp('March')
+    case 4
+        disp('April')
+    otherwise
+        disp('invalid month')
+end
+
+
+% 3번
+clear ,clc
+x = [3, -5, 0, 8, -2, 4, -7];
+count = 0;
+
+for i = 1:length(x)
+    if x(i) < 0
+        count = count + 1;
+    end
+end
+
+fprintf('음수의 개수 = %d\n', count);
+
+% 4번
+
+clear ,clc
+x = [4,-9, 0, 16,-1, 25];
+y = zeros(size(x));
+ 
+for k= 1:length(x)
+    if x(k)>0
+        y(k)=sqrt(x(k));
+    elseif x(k)==0
+        y(k) = x(k);
+    else 
+        y(k)= abs(x(k));
+    end
+end
+
+disp(y)
+
+% 5번
+clear ,clc
+a = input('a를 입력하세요: ');
+b = input('b를 입력하세요: ');
+cmd = input('명령어를 입력하세요 (add, sub, mul, div): ', 's');
+
+switch cmd
+    case 'add'
+        result = a + b;
+        fprintf('결과 = %.4f\n', result);
+
+    case 'sub'
+        result = a - b;
+        fprintf('결과 = %.4f\n', result);
+
+    case 'mul'
+        result = a * b;
+        fprintf('결과 = %.4f\n', result);
+
+    case 'div'
+        if b == 0
+            disp('division by zero')
+        else
+            result = a / b;
+            fprintf('결과 = %.4f\n', result);
+        end
+
+    otherwise
+        disp('invalid command')
+end
+
+% 6번
+
+clear ,clc
+N = input('양의 정수 N = ');
+count = 0;
+
+for i = 1:N
+    if mod(i,3) == 0 && mod(i,2) ~= 0
+        count = count + 1;
+    end
+end
+
+disp(count)
+
+% 7번
+clear ,clc
+N = input('양의 정수 N = ');
+a = zeros(1, N);
+
+for k = 1:N
+    if mod(k, 2) == 1
+        a(k) = k^2;
+    else
+        a(k) = k^3;
+    end
+end
+
+disp('벡터 a =')
+disp(a)
+
+% 8번
+
+clear ,clc
+
+price = [19, 18, 22, 21, 25, 19, 17, 21, 27, 29];
+
+cash = 1000000;      % 초기 자본
+shares = 0;          % 보유 주식 수
+buy_total = 0;       % 총 매수 금액
+sell_total = 0;      % 총 매도 금액
+
+for i = 1:length(price)-1
+    if price(i+1) > price(i)
+        % 오늘 매수
+        buy_amount = price(i) * 100;
+        cash = cash - buy_amount;
+        shares = shares + 100;
+        buy_total = buy_total + buy_amount;
+    elseif price(i+1) < price(i)
+        % 오늘 매도
+        sell_amount = price(i) * 100;
+        cash = cash + sell_amount;
+        shares = shares - 100;
+        sell_total = sell_total + sell_amount;
+    end
+end
+
+portfolio_value = cash + shares * price(end);
+
+fprintf('(a) 총 매수 금액 = %d원\n', buy_total);
+fprintf('(b) 총 매도 금액 = %d원\n', sell_total);
+fprintf('(c) 10일째 보유 주식 수 = %d주\n', shares);
+fprintf('(d) 포트폴리오 가치 = %d원\n', portfolio_value);
+
+% 9번
+
+clear ,clc
+mode = input('연결 방식 입력 (serial / parallel): ', 's');
+n = input('저항의 개수 n을 입력하세요: ');
+
+R = zeros(1, n);
+for i = 1:n
+    R(i) = input(sprintf('R(%d) = ', i));
+end
+
+switch mode
+    case 'serial'
+        Req = 0;
+        for i = 1:n
+            Req = Req + R(i);
+        end
+        fprintf('직렬 등가저항 = %.4f\n', Req);
+
+    case 'parallel'
+        sum_inv = 0;
+        for i = 1:n
+            sum_inv = sum_inv + 1 / R(i);
+        end
+        Req = 1 / sum_inv;
+        fprintf('병렬 등가저항 = %.4f\n', Req);
+
+end
