@@ -1,0 +1,368 @@
+%1
+x = 0:0.05:6*pi;
+y = sin(x) + 0.5*cos(3*x);
+plot(x, y)
+xticks([0, pi, 2*pi, 3*pi, 4*pi, 5*pi, 6*pi])
+xticklabels({'0','\pi','2\pi','3\pi','4\pi','5\pi','6\pi'})
+title('y = sin(x) + 0.5cos(3x)')
+xlabel('x'), ylabel('y'), grid on
+
+%2
+figure
+clear; clc
+x = 1:1:50;
+y = 3.^x;
+
+subplot(1,2,1)
+plot(x, y)
+title('일반 plot'), xlabel('x'), ylabel('y'), grid on
+
+subplot(1,2,2)
+semilogy(x, y)
+title('semilogy'), xlabel('x'), ylabel('y'), grid on
+
+% 설명: 일반 plot은 y값이 급격히 커져 초반 값이 거의 보이지 않음.
+% semilogy는 y축을 로그 스케일로 표시하여 전 구간에서
+% 지수 성장의 선형적 증가 패턴을 명확하게 볼 수 있음.
+
+%3
+figure
+clear; clc
+score = [72,85,91,66,78,88,95,54,60,73,82,90,69,77,84,92,58,63,79,87];
+
+% score.dat으로 저장 후 불러오기
+save('score.dat', 'score', '-ascii')
+score2 = load('score.dat');
+
+subplot(1,2,1)
+histogram(score2, 5)
+title('구간 수 = 5')
+xlabel('점수'), ylabel('빈도'), grid on
+
+subplot(1,2,2)
+histogram(score2, 10)
+title('구간 수 = 10')
+xlabel('점수'), ylabel('빈도'), grid on
+
+
+%4
+figure
+clear; clc
+f = @(x) sin(x) .* exp(-0.1*x);
+fplot(f, [0, 10*pi])
+title('f(x) = sin(x)e^{-0.1x}')
+xlabel('x'), ylabel('f(x)'), grid on
+
+%5
+figure
+clear; clc
+x = 0:0.1:10;
+y1 = x.^2;
+y2 = exp(0.5*x);
+
+yyaxis left
+plot(x, y1)
+ylabel('y_1 = x^2')
+
+yyaxis right
+plot(x, y2)
+ylabel('y_2 = e^{0.5x}')
+
+title('y1과 y2 비교')
+xlabel('x'), grid on
+
+% 설명: y1은 다항식 성장, y2는 지수 성장으로
+% 값의 크기 차이가 커서 yyaxis로 각각 다른 y축에 표시함.
+
+%6
+figure
+
+clear; clc
+t = 0:0.02:12*pi;
+x = (1 + 0.03*t) .* cos(t);
+y = (1 + 0.03*t) .* sin(t);
+z = 0.2*t;
+
+plot3(x, y, z)
+title('3D 매개곡선')
+xlabel('x'), ylabel('y'), zlabel('z'), grid on
+
+%7
+figure
+
+clear; clc
+[X, Y] = meshgrid(-4:0.1:4, -4:0.1:4);
+Z = X.^2 - Y.^2;
+
+mesh(X, Y, Z)
+title('z = x^2 - y^2')
+xlabel('x'), ylabel('y'), zlabel('z'), grid on
+
+% 설명: z = x²-y²는 saddle surface(안장면)임.
+% x 방향으로는 위로 볼록, y 방향으로는 아래로 볼록한
+% 말안장 모양의 곡면이 나타남.
+
+%8
+figure
+
+clear; clc
+
+[X, Y] = meshgrid(-2*pi:0.1:2*pi, -2*pi:0.1:2*pi);
+Z = sin(X) .* cos(Y);
+
+subplot(1,2,1)
+mesh(X, Y, Z)
+title('mesh: z = sin(x)cos(y)')
+xlabel('x'), ylabel('y'), zlabel('z')
+
+subplot(1,2,2)
+contour(X, Y, Z, 20)
+title('contour: z = sin(x)cos(y)')
+xlabel('x'), ylabel('y'), grid on
+
+% 설명: contour 그래프는 등고선을 통해 z값이 같은
+% (x,y) 위치를 2D로 보여줌. 함수의 최대/최솟값 위치와
+% 주기적 패턴을 평면에서 파악하기 쉬움.
+
+%9
+
+figure
+clear; clc
+t = 0:0.01:25;
+y = exp(-0.15*t) .* cos(4*t);
+
+% (a) 일반 plot
+subplot(1,3,1)
+plot(t, y)
+title('y(t) 일반 plot')
+xlabel('t'), ylabel('y(t)'), grid on
+
+% (b) envelope 함께 표시
+subplot(1,3,2)
+plot(t, y, t, exp(-0.15*t), 'r--', t, -exp(-0.15*t), 'r--')
+title('envelope 포함')
+xlabel('t'), ylabel('y(t)')
+legend('y(t)','위 envelope','아래 envelope'), grid on
+
+% (c) |y(t)| semilogy
+subplot(1,3,3)
+semilogy(t, abs(y))
+title('|y(t)| semilogy')
+xlabel('t'), ylabel('|y(t)|'), grid on
+
+% 설명: 로그 스케일에서 감쇠 진동의 포락선이
+% 직선으로 나타나 감쇠율을 명확히 확인할 수 있음.
+
+
+%10
+
+figure
+
+clear; clc
+[X, Y] = meshgrid(-6:0.1:6, -6:0.1:6);
+Z = cos(X) .* sin(Y) .* exp(-0.05*(X.^2 + Y.^2));
+
+% (a) mesh
+subplot(1,2,1)
+mesh(X, Y, Z)
+title('mesh: z = cos(x)sin(y)e^{-0.05(x²+y²)}')
+xlabel('x'), ylabel('y'), zlabel('z')
+
+% (b) contour
+subplot(1,2,2)
+contour(X, Y, Z, 20)
+title('contour'), xlabel('x'), ylabel('y'), grid on
+
+% (c) max 값과 위치 추정
+[max_val, idx] = max(Z(:));
+[row, col] = ind2sub(size(Z), idx);
+fprintf('최대값: %.4f\n', max_val)
+fprintf('위치: x = %.2f, y = %.2f\n', X(row,col), Y(row,col))
+
+%11
+
+figure
+
+clear; clc
+t = [0, 1, 2, 3, 4, 5, 6];
+C = [12, 8.9, 6.6, 4.9, 3.6, 2.7, 2.0];
+
+% (a) 일반 plot
+subplot(1,2,1)
+plot(t, C, 'o-')
+title('C(t) 일반 plot')
+xlabel('t'), ylabel('C(t)'), grid on
+
+% (b) semilogy
+subplot(1,2,2)
+semilogy(t, C, 'o-')
+title('C(t) semilogy')
+xlabel('t'), ylabel('C(t)'), grid on
+
+% (c) k 추정: log C = log C0 - kt → 선형 회귀
+p = polyfit(t, log(C), 1);
+k = -p(1);
+C0 = exp(p(2));
+fprintf('추정 k = %.4f\n', k)
+fprintf('추정 C0 = %.4f\n', C0)
+
+%12
+
+figure
+
+clear; clc
+n = 1:1:30;
+T1 = n;
+T2 = n .* log(n);
+T3 = n.^2;
+T4 = 2.^n;
+
+% (a) 일반 plot
+subplot(1,2,1)
+plot(n, T1, n, T2, n, T3, n, T4)
+title('일반 plot')
+xlabel('n'), ylabel('T(n)')
+legend('n','nlog(n)','n^2','2^n'), grid on
+
+% (b) semilogy
+subplot(1,2,2)
+semilogy(n, T1, n, T2, n, T3, n, T4)
+title('semilogy')
+xlabel('n'), ylabel('T(n)')
+legend('n','nlog(n)','n^2','2^n'), grid on
+
+% (c) 설명: 로그 스케일 그래프가 성장률 비교에 더 적합함.
+% 일반 plot에서는 2^n이 너무 커서 나머지가 보이지 않지만
+% semilogy에서는 네 함수의 성장 차이를 명확히 비교할 수 있음.
+
+%16
+
+figure
+
+clear; clc
+n = 1:1:30;
+T1 = n;
+T2 = n .* log(n);
+T3 = n.^2;
+T4 = 2.^n;
+
+% (a) 일반 plot
+subplot(1,2,1)
+plot(n, T1, n, T2, n, T3, n, T4)
+title('일반 plot')
+xlabel('n'), ylabel('T(n)')
+legend('n','nlog(n)','n^2','2^n'), grid on
+
+% (b) semilogy
+subplot(1,2,2)
+semilogy(n, T1, n, T2, n, T3, n, T4)
+title('semilogy')
+xlabel('n'), ylabel('T(n)')
+legend('n','nlog(n)','n^2','2^n'), grid on
+
+% (c) 설명: 로그 스케일 그래프가 성장률 비교에 더 적합함.
+% 일반 plot에서는 2^n이 너무 커서 나머지가 보이지 않지만
+% semilogy에서는 네 함수의 성장 차이를 명확히 비교할 수 있음.
+
+%17
+
+figure
+
+clear; clc
+t = 0:0.01:20;
+v = 5*exp(-0.2*t);
+
+% (1) 일반 plot
+subplot(1,2,1)
+plot(t, v)
+title('v(t) 일반 plot')
+xlabel('t'), ylabel('v(t)'), grid on
+
+% (2) semilogy
+subplot(1,2,2)
+semilogy(t, v)
+title('v(t) semilogy')
+xlabel('t'), ylabel('v(t)'), grid on
+
+% 설명: 일반 plot은 지수 감소 곡선으로 나타남.
+% semilogy에서는 직선으로 나타나며, 이는 지수 감소
+% 함수의 특성을 명확히 보여줌. 기울기 = -0.2(감쇠율).
+
+%18
+
+figure
+
+clear; clc
+A = [4 -1 2; 1 3 -1; 2 -2 5];
+b = [7; 4; 10];
+
+% (a) A^2 vs A.^2
+A_sq = A^2        % 행렬 곱 (A*A)
+A_elem_sq = A.^2  % 원소별 제곱
+% 설명: A^2은 행렬 곱, A.^2은 각 원소를 개별적으로 제곱
+
+% (b) det(A)
+d = det(A)
+if d ~= 0
+    disp('역행렬 존재')
+else
+    disp('역행렬 없음')
+end
+
+% (c) inv(A)*b vs A\b
+x1 = inv(A)*b
+x2 = A\b
+% 결과는 같다
+
+% (d) 선형 연립방정식 해
+x = A\b
+disp('해 x:'), disp(x)
+
+%19
+
+figure
+
+clear; clc
+A = [2 -1; 3 4];
+B = [1 0 -2; 3 5 1];
+C = [6 -3 4; 15 14 -1];
+
+% (a) AX = C - B
+% (b) X = A\(C-B)
+X = A \ (C - B)
+
+% (c) 검증: AX + B == C 인지 확인
+check = A*X + B
+disp('C와 같은지 확인:'), disp(check)
+disp('C:'), disp(C)
+
+% (d) inv(A)*(C-B) 대신 A\(C-B) 사용 이유:
+% A\(C-B)는 수치적으로 더 안정적이고 빠름.
+% inv(A)는 역행렬을 명시적으로 계산하므로
+% 부동소수점 오차가 누적될 수 있음.
+
+%20
+
+figure
+
+clear; clc
+X = [3 7 2 5;
+     5 9 4 6;
+     8 12 7 10;
+     10 15 9 13;
+     14 18 12 16];
+
+% (a) 각 열의 평균
+col_mean = mean(X)
+
+% (b) 중심화 행렬 Xc = X - mean(X)
+Xc = X - mean(X)
+
+% (c) S = Xc'*Xc 계산
+S = Xc' * Xc
+
+% (d) S의 대각원소와 비대각원소 의미
+% 대각원소: 각 변수의 분산(×N)에 비례 → 변수 자체의 퍼짐 정도
+% 비대각원소: 두 변수 간 공분산(×N)에 비례 → 변수 간 선형 관계 강도
+disp('S 행렬:'), disp(S)
+
