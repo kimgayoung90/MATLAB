@@ -1,0 +1,290 @@
+%% 1
+
+t = 0:0.01:30;
+f = exp(-0.12*t).*sin(5*t) + 0.3*cos(2*t);
+u = exp(-0.12*t) + 0.3;
+l = -exp(-0.12*t) - 0.3;
+
+idx = find(f(2:end-1) > f(1:end-2) & f(2:end-1) > f(3:end)) + 1;
+
+plot(t,f,'b'); hold on
+plot(t,u,'r--',t,l,'r--')
+plot(t(idx),f(idx),'ko','MarkerFaceColor','y')
+grid on
+legend('f(t)','u(t)','l(t)','local max')
+result1 = table(t(idx)', f(idx)', 'VariableNames', {'t','f'});
+disp(result1)
+
+%% 2
+clear; clc
+x = -5:0.05:5;
+y = -5:0.05:5;
+[X,Y] = meshgrid(x,y);
+Z = sin(X.*Y)./(1 + X.^2 + Y.^2);
+
+figure
+mesh(X,Y,Z)
+xlabel('x'); ylabel('y'); zlabel('z')
+title('문제 2 mesh 그래프')
+
+figure
+contour(X,Y,Z,25)
+colorbar
+xlabel('x'); ylabel('y')
+title('문제 2 등고선 그래프')
+
+absZ = abs(Z);
+maxAbsZ = max(absZ(:));
+idx = find(absZ == maxAbsZ);
+[row,col] = ind2sub(size(absZ),idx);
+fprintf('|Z| 최대값 = %.6f\n', maxAbsZ)
+fprintf('x = %.2f, y = %.2f\n', x(col), y(row))
+
+%% 3
+clear; clc
+A = [7 2 1; 2 6 -2; 1 -2 5];
+
+[V,D] = eig(A);
+eigenValues = diag(D);
+
+[lambda_max, idx] = max(eigenValues);
+v = V(:,idx);
+v = v / norm(v);
+
+disp(V)
+disp(D)
+disp(eigenValues)
+disp(lambda_max)
+disp(v)
+disp(A*v - lambda_max*v)
+
+%% 4
+clear; clc
+X = [2 5 1;
+     4 8 3;
+     6 11 7;
+     9 15 10;
+     13 20 14];
+
+colMean = mean(X);
+Xc = X - mean(X);
+S = Xc' * Xc;
+
+[V,D] = eig(S);
+eigenValues = diag(D);
+[lambda_max, idx] = max(eigenValues);
+v = V(:,idx);
+
+disp(colMean)
+disp(Xc)
+disp(S)
+disp(eigenValues)
+disp(lambda_max)
+disp(v)
+
+%% 5
+clear; clc
+A = [5 2 -1;
+    -2 6 3;
+     1 -1 7];
+b = [8; 5; 12];
+
+x1 = inv(A)*b;
+x2 = A\b;
+diff = x1 - x2;
+detA = det(A);
+
+disp(x1)
+disp(x2)
+disp(diff)
+disp(detA)
+
+if detA ~= 0
+    disp('det(A)가 0이 아니므로 해가 유일하게 존재한다.')
+end
+
+%% 6
+clear; clc
+x = -6:0.05:6;
+y = -6:0.05:6;
+[X,Y] = meshgrid(x,y);
+Z = exp(-0.08*(X.^2 + Y.^2)).*cos(3*X).*sin(2*Y);
+
+figure
+surf(X,Y,Z)
+xlabel('x'); ylabel('y'); zlabel('z')
+title('문제 6 surf 그래프')
+
+figure
+contour(X,Y,Z,30)
+colorbar;
+xlabel('x'); ylabel('y')
+title('문제 6 등고선 그래프')
+
+[maxZ, idxMax] = max(Z(:));
+[minZ, idxMin] = min(Z(:));
+
+[rowMax,colMax] = ind2sub(size(Z),idxMax);
+[rowMin,colMin] = ind2sub(size(Z),idxMin);
+
+fprintf('최대값 = %.6f, x = %.2f, y = %.2f\n', maxZ, x(colMax), y(rowMax))
+fprintf('최소값 = %.6f, x = %.2f, y = %.2f\n', minZ, x(colMin), y(rowMin))
+
+%% 7
+clear; clc
+
+n = [50 100 200 400 800 1600];
+T = [14 19 30 51 92 170];
+
+figure
+subplot(1,3,1)
+plot(n,T,'o-')
+xlabel('n');
+ylabel('T');
+title('plot')
+grid on
+
+subplot(1,3,2)
+semilogx(n,T,'o-')
+xlabel('n (log)');
+ylabel('T');
+title('semilogx')
+grid on
+
+subplot(1,3,3)
+semilogy(n,T,'o-')
+xlabel('n');
+ylabel('T (log)');
+title('semilogy')
+grid on
+
+disp('세 그래프 중 일반 그래프가 가장 직선에 가깝게 보인다.')
+
+%% 8
+
+figure
+
+clear; clc
+t = 0:0.01:24;
+P = 50 + 18*sin(pi*t/12) + 6*cos(pi*t/4);
+
+plot(t,P)
+grid on
+xlabel('t(hour)')
+ylabel('P(t)')
+
+[maxP, idxMax] = max(P);
+[minP, idxMin] = min(P);
+
+hold on
+plot(t(idxMax),maxP,'ro','MarkerFaceColor','r')
+plot(t(idxMin),minP,'bs','MarkerFaceColor','b')
+
+fprintf('최대 전력 = %.6f, 시간 = %.2f hour\n', maxP, t(idxMax))
+fprintf('최소 전력 = %.6f, 시간 = %.2f hour\n', minP, t(idxMin))
+
+%% 9
+clear; clc
+X = [1 3 0;
+     2 5 1;
+     4 8 3;
+     7 12 5;
+     11 17 9];
+
+x1 = X(:,1);
+x2 = X(:,2);
+x3 = X(:,3);
+
+theta12 = acosd(dot(x1,x2)/(norm(x1)*norm(x2)));
+theta13 = acosd(dot(x1,x3)/(norm(x1)*norm(x3)));
+theta23 = acosd(dot(x2,x3)/(norm(x2)*norm(x3)));
+
+theta = [theta12 theta13 theta23];
+[minTheta, idx] = min(theta);
+
+disp(theta)
+
+if idx == 1
+    disp('가장 방향이 비슷한 센서: 1번과 2번')
+elseif idx == 2
+    disp('가장 방향이 비슷한 센서: 1번과 3번')
+else
+    disp('가장 방향이 비슷한 센서: 2번과 3번')
+end
+
+%% 10
+clear; clc
+A = [9 -2 -1;
+    -2 8 -3;
+    -1 -3 10];
+b = [15; 7; 11];
+
+I = A\b;
+detA = det(A);
+absI = abs(I);
+[maxCurrent, idx] = max(absI);
+
+disp(I)
+disp(detA)
+disp(absI)
+fprintf('절댓값이 가장 큰 전류: i%d = %.6f\n', idx, I(idx))
+
+%% 11
+clear; clc
+t = 0:0.01:40;
+y = exp(-0.04*t).*(sin(4*t) + 0.6*sin(9*t));
+u = 1.6*exp(-0.04*t);
+l = -1.6*exp(-0.04*t);
+
+figure
+plot(t,y)
+grid on
+title('y(t)')
+
+figure
+plot(t,y,'b'); hold on
+plot(t,u,'r--')
+plot(t,l,'r--')
+grid on
+legend('y(t)','u(t)','l(t)')
+
+figure
+semilogy(t,abs(y))
+grid on
+xlabel('t (sec)')
+ylabel('|y(t)| (log scale)')
+title('log scale of |y(t)|')
+
+fprintf('u(0) = %.6f\n', u(1))
+fprintf('u(40) = %.6f\n', 1.6*exp(-0.04*40))
+
+%% 12
+clear; clc
+epoch = [1 2 5 10 20 50 100 200];
+loss = [3.1 2.4 1.7 1.2 0.83 0.36 0.14 0.06];
+
+figure
+plot(epoch,loss,'o-')
+grid on
+xlabel('epoch')
+ylabel('loss')
+title('plot')
+
+figure
+semilogy(epoch,loss,'o-')
+grid on
+xlabel('epoch')
+ylabel('loss')
+title('semilogy')
+
+r = loss(2:end)./loss(1:end-1);
+avg_r = mean(r);
+
+disp(r)
+disp(avg_r)
+
+if avg_r < 1
+    disp('평균 비율이 1보다 작으므로 loss가 전반적으로 감소한다.')
+else
+    disp('평균 비율이 1보다 크거나 같으므로 loss가 전반적으로 감소한다고 보기 어렵다.')
+end
