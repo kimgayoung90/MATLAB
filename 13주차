@@ -1,0 +1,265 @@
+%% Problem 1
+clear; clc;
+
+rng(13);
+
+p = 0.35 + (0.95-0.35)*rand(1,40);
+
+answers = rand(5000,40) < p;
+
+scores = sum(answers,2);
+
+meanScore = mean(scores);
+stdScore = std(scores);
+
+fprintf('평균 점수 = %.4f\n',meanScore);
+fprintf('표준편차 = %.4f\n',stdScore);
+
+figure;
+histogram(scores);
+xlabel('Score');
+ylabel('Count');
+title('Score Distribution');
+
+ratio = mean(scores >= meanScore);
+
+fprintf('평균 이상 학생 비율 = %.4f\n',ratio);
+
+%% Problem 2
+clear; clc;
+
+weights = 100 + 4*randn(10000,20);
+
+boxMean = mean(weights,2);
+
+fail = (boxMean < 98) | (boxMean > 102);
+
+failRate = mean(fail);
+
+fprintf('불합격률 = %.6f\n',failRate);
+
+figure;
+histogram(boxMean);
+hold on;
+xline(98,'r','LineWidth',2);
+xline(102,'r','LineWidth',2);
+title('Box Mean Weight');
+
+%% Problem 3
+clear; clc;
+
+N = randn(100000,1);
+
+S = 1.8 + N;
+
+success = S >= 1.2;
+
+successRate = mean(success);
+
+fprintf('감지 성공률 = %.6f\n',successRate);
+
+figure;
+histogram(S);
+hold on;
+xline(1.2,'r','LineWidth',2);
+title('Received Signal');
+
+%% Problem 4
+clear; clc;
+
+orders = poissrnd(180,365,1);
+
+totalTime = zeros(365,1);
+
+for i = 1:365
+
+    t = 6 + 2*randn(orders(i),1);
+
+    t(t<0) = 0;
+
+    totalTime(i) = sum(t);
+
+end
+
+ratio = mean(totalTime > 1200);
+
+fprintf('1200분 초과 비율 = %.4f\n',ratio);
+
+figure;
+plot(orders);
+title('Daily Orders');
+
+figure;
+plot(totalTime);
+title('Daily Processing Time');
+
+figure;
+scatter(orders,totalTime);
+xlabel('Orders');
+ylabel('Total Time');
+title('Orders vs Processing Time');
+
+%% Problem 5
+clear; clc;
+
+measurements = 25 + 0.8*randn(10000,30);
+
+avgTemp = mean(measurements,2);
+
+event = (avgTemp >= 24.7) & (avgTemp <= 25.3);
+
+prob = mean(event);
+
+fprintf('확률 = %.6f\n',prob);
+
+singleSensor = measurements(:,1);
+
+figure;
+histogram(singleSensor,'Normalization','pdf');
+hold on;
+histogram(avgTemp,'Normalization','pdf');
+legend('Sensor 1','Average of 30 Sensors');
+title('Comparison');
+
+%% Problem 6
+clear; clc;
+
+r = 0.0008 + 0.015*randn(5000,60);
+
+asset = 100*cumprod(1+r,2);
+
+finalValue = asset(:,end);
+
+fprintf('평균 = %.4f\n',mean(finalValue));
+fprintf('최소 = %.4f\n',min(finalValue));
+fprintf('최대 = %.4f\n',max(finalValue));
+
+prob = mean(finalValue < 100);
+
+fprintf('100 미만 확률 = %.4f\n',prob);
+
+idx = randperm(5000,30);
+
+figure;
+plot(asset(idx,:)');
+title('30 Sample Paths');
+xlabel('Day');
+ylabel('Asset Value');
+
+%% Problem 7
+clear; clc;
+
+arrivalGap = exprnd(8,300,1);
+
+arrivalTime = cumsum(arrivalGap);
+
+service = 10 + 3*randn(300,1);
+
+service(service<0) = 1;
+
+startTime = zeros(300,1);
+finishTime = zeros(300,1);
+
+startTime(1) = arrivalTime(1);
+finishTime(1) = startTime(1) + service(1);
+
+for i = 2:300
+
+    startTime(i) = max(arrivalTime(i),finishTime(i-1));
+
+    finishTime(i) = startTime(i) + service(i);
+
+end
+
+waitTime = startTime - arrivalTime;
+
+fprintf('평균 대기시간 = %.4f\n',mean(waitTime));
+fprintf('최대 대기시간 = %.4f\n',max(waitTime));
+
+ratio = mean(waitTime > 20);
+
+fprintf('20분 초과 비율 = %.4f\n',ratio);
+
+figure;
+histogram(waitTime);
+title('Waiting Time');
+
+%% Problem 8
+clear; clc;
+
+p = [0.72 0.81 0.67 0.90 0.76];
+
+R = rand(100000,5);
+
+detect = R < p;
+
+numDetected = sum(detect,2);
+
+success = numDetected >= 3;
+
+prob = mean(success);
+
+fprintf('시스템 감지 확률 = %.6f\n',prob);
+
+figure;
+histogram(numDetected,'BinMethod','integers');
+title('Detected Modules');
+
+%% Problem 9
+clear; clc;
+
+N = 50000;
+
+stage1 = rand(N,1) < 0.94;
+
+stage2 = false(N,1);
+
+idx1 = find(stage1);
+
+stage2(idx1) = rand(length(idx1),1) < 0.91;
+
+stage3 = false(N,1);
+
+idx2 = find(stage2);
+
+stage3(idx2) = rand(length(idx2),1) < 0.88;
+
+finalPass = stage3;
+
+passRate = mean(finalPass);
+
+fprintf('최종 합격률 = %.6f\n',passRate);
+
+fail1 = sum(~stage1);
+fail2 = sum(stage1 & ~stage2);
+fail3 = sum(stage2 & ~stage3);
+passFinal = sum(finalPass);
+
+figure;
+bar([fail1 fail2 fail3 passFinal]);
+xticklabels({'Stage1 Fail','Stage2 Fail','Stage3 Fail','Pass'});
+title('Inspection Results');
+
+
+%% Problem 10
+clear; clc;
+
+loadVariation = 35*randn(10000,1);
+
+overload = rand(10000,1) < 0.12;
+
+powerUsage = 500 + loadVariation + 120*overload;
+
+ratio = mean(powerUsage > 650);
+
+fprintf('650 초과 비율 = %.6f\n',ratio);
+
+figure;
+histogram(powerUsage);
+title('Power Usage');
+
+meanOverload = mean(powerUsage(overload));
+meanNormal = mean(powerUsage(~overload));
+
+fprintf('과부하 발생일 평균 = %.4f\n',meanOverload);
+fprintf('과부하 미발생일 평균 = %.4f\n',meanNormal);
